@@ -1,0 +1,6 @@
+rootProject.name = 'msa-board-service'
+
+include 'post-service'
+include 'reply-service'
+include 'api-gateway'
+
