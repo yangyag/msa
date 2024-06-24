@@ -5,7 +5,7 @@ spring:
   application:
     name: post-service
   datasource:
-    url: jdbc:h2:mem:postdb
+    url: jdbc:h2:mem:boarddb
     driver-class-name: org.h2.Driver
     username: sa
     password:
