@@ -32,3 +32,7 @@ eureka:
       defaultZone: http://eureka-service:8761/eureka/
   instance:
     preferIpAddress: true
+
+# 별도의 CORS 설정 섹션
+cors:
+  allowed-origins: http://localhost:8083, http://frontend-service:8083
