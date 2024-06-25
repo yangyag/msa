@@ -175,7 +175,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: yangyag2/msa-api-gateway-image:v1.1.1
+          image: yangyag2/msa-api-gateway-image:v1.1.3
           ports:
             - containerPort: 8080
           env:
