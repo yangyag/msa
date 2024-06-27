@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vue-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vue-frontend
+  template:
+    metadata:
+      labels:
+        app: vue-frontend
+    spec:
+      containers:
+        - name: vue-frontend
+          image: yangyag2/vue-board-project:v1.0.4
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vue-frontend
+spec:
+  selector:
+    app: vue-frontend
+  ports:
+    - port: 8083
+      targetPort: 80
+  type: ClusterIP

@@ -1,6 +1,8 @@
+version: '3.8'
+
 services:
   eureka-service:
-    image: yangyag2/msa-eureka-service-image:v1.1.0
+    image: yangyag2/msa-eureka-service-image:latest
     ports:
       - "8761:8761"
     environment:
@@ -12,9 +14,14 @@ services:
       retries: 5
     networks:
       - msa-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   post-service:
-    image: yangyag2/msa-post-service-image:v1.1.0
+    image: yangyag2/msa-post-service-image:latest
     ports:
       - "8081:8081"
     environment:
@@ -28,9 +35,14 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   reply-service:
-    image: yangyag2/msa-reply-service-image:v1.1.0
+    image: yangyag2/msa-reply-service-image:latest
     ports:
       - "8082:8082"
     environment:
@@ -44,9 +56,40 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  category-service:
+    image: yangyag2/msa-category-service-image:latest
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/shopdb
+      - SPRING_DATASOURCE_USERNAME=yangyag
+      - SPRING_DATASOURCE_PASSWORD=yangyag1!
+    networks:
+      - msa-network
+    depends_on:
+      eureka-service:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   api-gateway:
-    image: yangyag2/msa-api-gateway-image:v1.1.0
+    image: yangyag2/msa-api-gateway-image:latest
     ports:
       - "8080:8080"
     environment:
@@ -61,10 +104,44 @@ services:
         condition: service_started
       reply-service:
         condition: service_started
+      category-service:
+        condition: service_started
     deploy:
       restart_policy:
         condition: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  postgres:
+    image: postgres:14
+    container_name: shop-postgres
+    environment:
+      - POSTGRES_DB=shopdb
+      - POSTGRES_USER=yangyag
+      - POSTGRES_PASSWORD=yangyag1!
+    ports:
+      - "5432:5432"
+    volumes:
+      - shop_postgres_data:/var/lib/postgresql/data
+    networks:
+      - msa-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yangyag -d shopdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
 
 networks:
   msa-network:
     driver: bridge
+
+volumes:
+  shop_postgres_data:
