@@ -1,0 +1,25 @@
+server:
+  port: 8084  # 카테고리 서비스용 포트 번호 (다른 서비스와 겹치지 않도록 주의)
+
+spring:
+  application:
+    name: category-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/categorydb  # PostgreSQL 데이터베이스 URL
+    driver-class-name: org.postgresql.Driver
+    username: yangyag  # PostgreSQL 사용자 이름
+    password: yangyag1  # PostgreSQL 비밀번호
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true  # SQL 쿼리 로깅 (개발 시 유용)
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-service:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    preferIpAddress: true
