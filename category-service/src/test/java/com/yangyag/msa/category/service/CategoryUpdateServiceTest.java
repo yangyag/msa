@@ -1,11 +1,10 @@
 package com.yangyag.msa.category.service;
 
-import com.yangyag.msa.category.command.CategoryCreateCommand;
 import com.yangyag.msa.category.command.Command;
 import com.yangyag.msa.category.factory.CategoryCommandFactory;
-import com.yangyag.msa.category.model.dto.CategoryCreateRequest;
+import com.yangyag.msa.category.model.dto.CategoryUpdateRequest;
 import com.yangyag.msa.category.model.entity.Category;
-import com.yangyag.msa.category.service.impl.CategoryCreateServiceImpl;
+import com.yangyag.msa.category.service.impl.CategoryUpdateServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +15,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
-class CategoryCreateServiceTest {
+class CategoryUpdateServiceTest {
 
     @Mock
     private Command<Category> command;
@@ -25,30 +24,29 @@ class CategoryCreateServiceTest {
     private CategoryCommandFactory factory;
 
     @InjectMocks
-    private CategoryCreateServiceImpl service;
+    private CategoryUpdateServiceImpl service;
 
     @Test
     void shouldCreateCategoryWhenValidRequest() {
-        CategoryCreateRequest request = CategoryCreateRequest.builder()
-                .name("의류")
-                .parentId(0L)
-                .depth(0L)
+        CategoryUpdateRequest request = CategoryUpdateRequest.builder()
+                .Id(1L)
+                .name("신발")
                 .build();
 
         Category category = Category.builder()
+                .id(request.getId())
                 .name(request.getName())
-                .parentId(request.getParentId())
-                .depth(request.getDepth())
                 .build();
 
         //given
-        given(factory.createCategoryCommand(request)).willReturn(command);
+        given(factory.updateCategoryCommand(request)).willReturn(command);
         given(command.execute()).willReturn(category);
 
         //when
-        service.create(request);
+        service.update(request);
 
         //then
-        then(factory).should().createCategoryCommand(request);
+        then(factory).should().updateCategoryCommand(request);
+        then(command).should().execute();
     }
 }
