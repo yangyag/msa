@@ -6,6 +6,16 @@ set VERSION=v1.1.0
 set DOCKER_HUB_USERNAME=yangyag2
 set SERVICE_NAME=post-service
 
+REM Gradle을 사용하여 JAR 파일 빌드
+echo Building JAR file for %SERVICE_NAME%...
+cd ..
+call gradlew :%SERVICE_NAME%:bootJar
+if %errorlevel% neq 0 (
+    echo Failed to build JAR file for %SERVICE_NAME%
+    exit /b 1
+)
+cd docker
+
 REM 이미지 빌드
 echo Building %SERVICE_NAME% image...
 docker build -t msa-%SERVICE_NAME%-image ..\%SERVICE_NAME%\
