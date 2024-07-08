@@ -18,5 +18,7 @@ public class Category {
     @Column(name = "parent_id")
     private Long parentId;
 
-    private Long depth;
+    public void setName(String name) {
+        this.name = name;
+    }
 }

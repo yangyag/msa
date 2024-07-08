@@ -9,5 +9,4 @@ import lombok.*;
 public class CategoryCreateRequest {
     private String name;
     private Long parentId;
-    private Long depth;
 }

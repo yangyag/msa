@@ -13,13 +13,14 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CategoryCommandFactory {
-    private CategoryRepository repository;
+    private final CategoryCreateCommand categoryCreateCommand;
+    private final CategoryUpdateCommand categoryUpdateCommand;
 
     public Command<Category> createCategoryCommand(CategoryCreateRequest request) {
-        return new CategoryCreateCommand(request, repository);
+        return categoryCreateCommand.withRequest(request);
     }
 
     public Command<Category> updateCategoryCommand(CategoryUpdateRequest request) {
-        return new CategoryUpdateCommand(request, repository);
+        return categoryUpdateCommand.withRequest(request);
     }
 }

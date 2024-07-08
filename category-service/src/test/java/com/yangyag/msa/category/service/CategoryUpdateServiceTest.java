@@ -29,7 +29,7 @@ class CategoryUpdateServiceTest {
     @Test
     void shouldCreateCategoryWhenValidRequest() {
         CategoryUpdateRequest request = CategoryUpdateRequest.builder()
-                .Id(1L)
+                .id(1L)
                 .name("신발")
                 .build();
 

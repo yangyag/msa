@@ -5,7 +5,7 @@ spring:
   application:
     name: category-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/categorydb  # PostgreSQL 데이터베이스 URL
+    url: jdbc:postgresql://postgres:5432/msa_db  # PostgreSQL 데이터베이스 URL
     driver-class-name: org.postgresql.Driver
     username: yangyag  # PostgreSQL 사용자 이름
     password: yangyag1  # PostgreSQL 비밀번호

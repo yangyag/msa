@@ -32,13 +32,11 @@ class CategoryCreateServiceTest {
         CategoryCreateRequest request = CategoryCreateRequest.builder()
                 .name("의류")
                 .parentId(0L)
-                .depth(0L)
                 .build();
 
         Category category = Category.builder()
                 .name(request.getName())
                 .parentId(request.getParentId())
-                .depth(request.getDepth())
                 .build();
 
         //given

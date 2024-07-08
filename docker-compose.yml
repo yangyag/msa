@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   eureka-service:
-    image: yangyag2/msa-eureka-service-image:latest
+    image: yangyag2/msa-eureka-service-image:v1.1.1
     ports:
       - "8761:8761"
     environment:
@@ -21,7 +21,7 @@ services:
         max-file: "5"
 
   post-service:
-    image: yangyag2/msa-post-service-image:latest
+    image: yangyag2/msa-post-service-image:v1.1.0
     ports:
       - "8081:8081"
     environment:
@@ -42,7 +42,7 @@ services:
         max-file: "5"
 
   reply-service:
-    image: yangyag2/msa-reply-service-image:latest
+    image: yangyag2/msa-reply-service-image:v1.1.0
     ports:
       - "8082:8082"
     environment:
@@ -63,13 +63,13 @@ services:
         max-file: "5"
 
   category-service:
-    image: yangyag2/msa-category-service-image:latest
+    image: yangyag2/msa-category-service-image:v1.1.4
     ports:
       - "8084:8084"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/shopdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/msa_db
       - SPRING_DATASOURCE_USERNAME=yangyag
       - SPRING_DATASOURCE_PASSWORD=yangyag1!
     networks:
@@ -89,7 +89,7 @@ services:
         max-file: "5"
 
   api-gateway:
-    image: yangyag2/msa-api-gateway-image:latest
+    image: yangyag2/msa-api-gateway-image:v1.1.4
     ports:
       - "8080:8080"
     environment:
@@ -117,9 +117,9 @@ services:
 
   postgres:
     image: postgres:14
-    container_name: shop-postgres
+    container_name: msa-postgres
     environment:
-      - POSTGRES_DB=shopdb
+      - POSTGRES_DB=msa_db
       - POSTGRES_USER=yangyag
       - POSTGRES_PASSWORD=yangyag1!
     ports:
@@ -129,7 +129,7 @@ services:
     networks:
       - msa-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U yangyag -d shopdb"]
+      test: ["CMD-SHELL", "pg_isready -U yangyag -d msa_db"]
       interval: 10s
       timeout: 5s
       retries: 5
