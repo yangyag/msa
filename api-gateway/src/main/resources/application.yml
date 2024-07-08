@@ -23,6 +23,12 @@ spring:
             - Path=/api/replies/**
           filters:
             - RewritePath=/api/replies/(?<segment>.*), /api/replies/${segment}
+        - id: category-service
+          uri: lb://category-service
+          predicates:
+            - Path=/api/categories/**
+          filters:
+            - RewritePath=/api/categories/(?<segment>.*), /api/categories/${segment}
 
 eureka:
   client:

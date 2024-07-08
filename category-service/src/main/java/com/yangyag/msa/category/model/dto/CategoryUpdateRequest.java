@@ -7,6 +7,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CategoryUpdateRequest {
-    private Long Id;
+    private Long id;
     private String name;
 }
