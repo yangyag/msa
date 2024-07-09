@@ -5,6 +5,7 @@ import com.yangyag.msa.category.config.TestSecurityConfig;
 import com.yangyag.msa.category.model.dto.CategoryCreateRequest;
 import com.yangyag.msa.category.model.entity.Category;
 import com.yangyag.msa.category.service.CategoryCreateService;
+import com.yangyag.msa.category.service.CategoryUpdateService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,9 +20,9 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CategoryController.class)
+@WebMvcTest(CategoryCommandController.class)
 @ContextConfiguration(classes = {TestSecurityConfig.class})
-public class CategoryControllerTest {
+public class CategoryCommandControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,11 +30,14 @@ public class CategoryControllerTest {
     @MockBean
     private CategoryCreateService categoryCreateService;
 
+    @MockBean
+    private CategoryUpdateService categoryUpdateService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
-    public void testCreateCategory() throws Exception {
+    public void shouldCreateCategory() throws Exception {
         CategoryCreateRequest request = CategoryCreateRequest.builder()
                 .name("의류")
                 .build();
