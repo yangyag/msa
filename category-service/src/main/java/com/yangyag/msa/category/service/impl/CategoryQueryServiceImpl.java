@@ -16,7 +16,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
 
     @Override
     public Category getCategory(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("%S 는 없어요", id));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Category", id));
     }
 
     @Override
