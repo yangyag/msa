@@ -1,4 +1,4 @@
-package com.yangyag.msa.category.controller;
+package com.yangyag.msa.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yangyag.msa.category.model.dto.CategoryCreateRequest;
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CategoryControllerIntegrationTest {
+public class CategoryIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 

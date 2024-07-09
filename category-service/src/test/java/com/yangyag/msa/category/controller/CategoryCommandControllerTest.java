@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yangyag.msa.category.config.TestSecurityConfig;
 import com.yangyag.msa.category.model.dto.CategoryCreateRequest;
 import com.yangyag.msa.category.model.entity.Category;
-import com.yangyag.msa.category.service.CategoryCreateService;
-import com.yangyag.msa.category.service.CategoryUpdateService;
+import com.yangyag.msa.category.service.CategoryCommandService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -28,10 +27,7 @@ public class CategoryCommandControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private CategoryCreateService categoryCreateService;
-
-    @MockBean
-    private CategoryUpdateService categoryUpdateService;
+    private CategoryCommandService categoryCommandService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -43,7 +39,7 @@ public class CategoryCommandControllerTest {
                 .build();
 
         //given
-        given(categoryCreateService.create(any())).willReturn(mock(Category.class));
+        given(categoryCommandService.create(any())).willReturn(mock(Category.class));
 
         //when&then
         mockMvc.perform(post("/api/categories")

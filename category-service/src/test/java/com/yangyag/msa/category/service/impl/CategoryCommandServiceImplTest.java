@@ -1,11 +1,10 @@
-package com.yangyag.msa.category.service;
+package com.yangyag.msa.category.service.impl;
 
-import com.yangyag.msa.category.command.CategoryCreateCommand;
 import com.yangyag.msa.category.command.Command;
 import com.yangyag.msa.category.factory.CategoryCommandFactory;
 import com.yangyag.msa.category.model.dto.CategoryCreateRequest;
+import com.yangyag.msa.category.model.dto.CategoryUpdateRequest;
 import com.yangyag.msa.category.model.entity.Category;
-import com.yangyag.msa.category.service.impl.CategoryCreateServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,8 +15,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
-class CategoryCreateServiceTest {
-
+class CategoryCommandServiceImplTest {
     @Mock
     private Command<Category> command;
 
@@ -25,7 +23,7 @@ class CategoryCreateServiceTest {
     private CategoryCommandFactory factory;
 
     @InjectMocks
-    private CategoryCreateServiceImpl service;
+    private CategoryCommandServiceImpl categoryCommandService;
 
     @Test
     void shouldCreateCategoryWhenValidRequest() {
@@ -44,9 +42,33 @@ class CategoryCreateServiceTest {
         given(command.execute()).willReturn(category);
 
         //when
-        service.create(request);
+        categoryCommandService.create(request);
 
         //then
         then(factory).should().createCategoryCommand(request);
+    }
+
+    @Test
+    void shouldUpdateCategoryWhenValidRequest() {
+        CategoryUpdateRequest request = CategoryUpdateRequest.builder()
+                .id(1L)
+                .name("신발")
+                .build();
+
+        Category category = Category.builder()
+                .id(request.getId())
+                .name(request.getName())
+                .build();
+
+        //given
+        given(factory.updateCategoryCommand(request)).willReturn(command);
+        given(command.execute()).willReturn(category);
+
+        //when
+        categoryCommandService.update(request);
+
+        //then
+        then(factory).should().updateCategoryCommand(request);
+        then(command).should().execute();
     }
 }
