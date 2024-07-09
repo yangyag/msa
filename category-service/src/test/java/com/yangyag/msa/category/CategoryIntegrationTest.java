@@ -1,7 +1,10 @@
 package com.yangyag.msa.category;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yangyag.msa.category.model.dto.CategoryCreateRequest;
+import com.yangyag.msa.category.model.dto.CategoryDeleteRequest;
+import com.yangyag.msa.category.model.dto.CategoryUpdateRequest;
 import com.yangyag.msa.category.model.entity.Category;
 import com.yangyag.msa.category.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -48,17 +50,6 @@ public class CategoryIntegrationTest {
     }
 
     @Test
-    void shouldCreateCategory() throws Exception {
-        CategoryCreateRequest request = CategoryCreateRequest.builder().name("의류").build();
-
-        //when&then
-        mockMvc.perform(post("/api/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
     void shouldReturnCategoryWhenGetRequestWithExistingId() throws Exception {
         // when & then
         mockMvc.perform(get("/api/categories/{id}", category1.getId()))
@@ -77,5 +68,45 @@ public class CategoryIntegrationTest {
                 .andExpect(jsonPath("$[0].name").value(category1.getName()))
                 .andExpect(jsonPath("$[1].id").value(category2.getId()))
                 .andExpect(jsonPath("$[1].name").value(category2.getName()));
+    }
+
+    @Test
+    void shouldCreateCategory() throws Exception {
+        CategoryCreateRequest request = CategoryCreateRequest.builder().name("의류").build();
+
+        //when&then
+        mockMvc.perform(post("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void shouldUpdateCategoryWhenValidRequest() throws Exception {
+        CategoryUpdateRequest request = CategoryUpdateRequest.builder()
+                .name("신발")
+                .id(1L)
+                .build();
+
+        //when&then
+        mockMvc.perform(patch("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldDeleteCategoryWhenGetRequestWithExistingId() throws Exception {
+        Category category = repository.save(Category.builder()
+                .name("가전제품")
+                .build());
+
+        CategoryDeleteRequest request = CategoryDeleteRequest.builder().id(category.getId()).build();
+
+        //when&then
+        mockMvc.perform(delete("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNoContent());
     }
 }

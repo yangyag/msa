@@ -11,22 +11,20 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CategoryUpdateCommand implements Command<Category> {
-    private CategoryUpdateRequest request;
     private final CategoryRepository repository;
 
-    public CategoryUpdateCommand withRequest(final CategoryUpdateRequest request) {
-        this.request = request;
-        return this;
+    public Command<Category> withRequest(CategoryUpdateRequest request) {
+        return () ->  repository.findById(request.getId())
+                .map(category -> {
+                    category.setName(request.getName());
+                    return repository.save(category);
+                })
+                .orElseThrow(() ->
+                        new EntityNotFoundException(String.format("%s 값을 찾을 수 없습니다.", request.getId())));
     }
 
     @Override
     public Category execute() {
-        Category category = repository.findById(request.getId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException(String.format("%s 값을 찾을 수 없습니다.", request.getId())));
-
-        category.setName(request.getName());
-
-        return repository.save(category);
+        throw new IllegalStateException("이 메소드는 직접 실행할 수 없습니다. withId() 를 사용하세요.");
     }
 }
