@@ -11,6 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -70,5 +74,24 @@ class CategoryCommandServiceImplTest {
         //then
         then(factory).should().updateCategoryCommand(request);
         then(command).should().execute();
+    }
+
+    @Test
+    void adsf() {
+        Supplier<String> supplier = () -> "하하하";
+
+        System.out.println(supplier.get());
+
+        Consumer<String> consumer = System.out::println;
+
+        consumer.accept("aaaaaa");
+
+        Function<Long, String> f = this::aaa;
+
+        System.out.println(f.apply(1L));
+    }
+
+    private String aaa(Long fff) {
+            return String.valueOf(fff);
     }
 }

@@ -9,21 +9,23 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CategoryCreateCommand implements Command<Category> {
-    private CategoryCreateRequest request;
     private final CategoryRepository repository;
 
-    public CategoryCreateCommand withRequest(CategoryCreateRequest request) {
-        this.request = request;
-        return this;
+    public Command<Category> withRequest(CategoryCreateRequest request) {
+        return () -> this.saveCategory(request);
     }
 
-    @Override
-    public Category execute() {
+    private Category saveCategory(CategoryCreateRequest request) {
         Category category = Category.builder()
                 .name(request.getName())
                 .parentId(request.getParentId())
                 .build();
 
         return repository.save(category);
+    }
+
+    @Override
+    public Category execute() {
+        throw new IllegalStateException("이 메소드는 직접 실행할 수 없습니다. withId() 를 사용하세요.");
     }
 }
