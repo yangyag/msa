@@ -75,23 +75,4 @@ class CategoryCommandServiceImplTest {
         then(factory).should().updateCategoryCommand(request);
         then(command).should().execute();
     }
-
-    @Test
-    void adsf() {
-        Supplier<String> supplier = () -> "하하하";
-
-        System.out.println(supplier.get());
-
-        Consumer<String> consumer = System.out::println;
-
-        consumer.accept("aaaaaa");
-
-        Function<Long, String> f = this::aaa;
-
-        System.out.println(f.apply(1L));
-    }
-
-    private String aaa(Long fff) {
-            return String.valueOf(fff);
-    }
 }
