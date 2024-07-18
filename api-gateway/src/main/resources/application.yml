@@ -6,29 +6,49 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
       routes:
+        - id: auth-service
+          uri: lb://api-gateway
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - RewritePath=/api/auth/(?<segment>.*), /auth/${segment}
         - id: post-service
           uri: lb://post-service
           predicates:
             - Path=/api/posts/**
           filters:
             - RewritePath=/api/posts/(?<segment>.*), /api/posts/${segment}
+            - JwtAuthenticationFilter
         - id: reply-service
           uri: lb://reply-service
           predicates:
             - Path=/api/replies/**
           filters:
             - RewritePath=/api/replies/(?<segment>.*), /api/replies/${segment}
+            - JwtAuthenticationFilter
         - id: category-service
           uri: lb://category-service
           predicates:
             - Path=/api/categories/**
           filters:
             - RewritePath=/api/categories/(?<segment>.*), /api/categories/${segment}
+            - JwtAuthenticationFilter
+  security:
+    csrf:
+      enabled: false
 
 eureka:
   client:
