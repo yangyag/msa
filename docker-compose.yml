@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   eureka-service:
     image: yangyag2/msa-eureka-service-image:v1.1.1
@@ -63,7 +61,7 @@ services:
         max-file: "5"
 
   category-service:
-    image: yangyag2/msa-category-service-image:v1.1.4
+    image: yangyag2/msa-category-service-image:v1.1.5
     ports:
       - "8084:8084"
     environment:
@@ -89,17 +87,21 @@ services:
         max-file: "5"
 
   api-gateway:
-    image: yangyag2/msa-api-gateway-image:v1.1.4
+    image: yangyag2/msa-api-gateway-image:v1.1.9
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak-sidecar:8091/auth/realms/msa-realm
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak-sidecar:8091/auth/realms/msa-realm/protocol/openid-connect/certs
     networks:
       - msa-network
     depends_on:
       eureka-service:
         condition: service_healthy
+      keycloak-service:
+        condition: service_started
       post-service:
         condition: service_started
       reply-service:
@@ -139,9 +141,53 @@ services:
         max-size: "10m"
         max-file: "5"
 
+  keycloak-service:
+    image: yangyag2/msa-keycloak-service-image:v1.1.0
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:8080/auth
+    networks:
+      - msa-network
+    depends_on:
+      eureka-service:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    deploy:
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - "8090:8080"
+    command:
+      - start-dev
+    networks:
+      - msa-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 networks:
   msa-network:
     driver: bridge
 
 volumes:
   shop_postgres_data:
+  keycloak_data:

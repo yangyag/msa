@@ -40,7 +40,7 @@ public class CategoryIntegrationTest {
         this.saveCategories();
     }
 
-    void saveCategories() {
+    private void saveCategories() {
         category1 = repository.save(Category.builder()
                 .name("의류")
                 .build());
@@ -104,9 +104,7 @@ public class CategoryIntegrationTest {
     class DeleteTests {
         @Test
         void shouldDeleteCategoryWhenGetRequestWithExistingId() throws Exception {
-            Category category = repository.save(Category.builder()
-                    .name("가전제품")
-                    .build());
+            Category category = this.createTempCategoryForDeleteTest();
 
             CategoryDeleteRequest request = CategoryDeleteRequest.builder().id(category.getId()).build();
 
@@ -114,6 +112,12 @@ public class CategoryIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isNoContent());
+        }
+
+        private Category createTempCategoryForDeleteTest() {
+            return repository.save(Category.builder()
+                    .name("가전제품")
+                    .build());
         }
     }
 }

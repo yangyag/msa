@@ -2,9 +2,9 @@
 setlocal enabledelayedexpansion
 
 REM 변수 설정
-set VERSION=v1.1.5
+set VERSION=v1.1.0
 set DOCKER_HUB_USERNAME=yangyag2
-set SERVICE_NAME=category-service
+set SERVICE_NAME=keycloak-service
 
 REM Gradle을 사용하여 JAR 파일 빌드
 echo Building JAR file for %SERVICE_NAME%...
