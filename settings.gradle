@@ -5,5 +5,3 @@ include 'reply-service'
 include 'api-gateway'
 include 'eureka-service'
 include 'category-service'
-include 'keycloak-service'
-
