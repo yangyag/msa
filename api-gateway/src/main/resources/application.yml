@@ -29,18 +29,6 @@ spring:
             - Path=/api/categories/**
           filters:
             - RewritePath=/api/categories/(?<segment>.*), /api/categories/${segment}
-        - id: keycloak
-          uri: lb://keycloak-service
-          predicates:
-            - Path=/auth/**
-          filters:
-            - RewritePath=/auth/(?<segment>.*), /${segment}
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://keycloak-service:8091/realms/msa-realm
-          jwk-set-uri: http://keycloak-service:8091/realms/msa-realm/protocol/openid-connect/certs
 
 eureka:
   client:
@@ -51,5 +39,6 @@ eureka:
   instance:
     preferIpAddress: true
 
+# 별도의 CORS 설정 섹션
 cors:
-  allowed-origins: http://localhost:8083, http://frontend-service:8083, http://keycloak-service:8091
+  allowed-origins: http://localhost:8083, http://frontend-service:8083
