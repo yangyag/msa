@@ -31,21 +31,21 @@ spring:
             - Path=/api/posts/**
           filters:
             - RewritePath=/api/posts/(?<segment>.*), /api/posts/${segment}
-            - JwtAuthenticationFilter
+            - JwtAuthenticationFilterFactory
         - id: reply-service
           uri: lb://reply-service
           predicates:
             - Path=/api/replies/**
           filters:
             - RewritePath=/api/replies/(?<segment>.*), /api/replies/${segment}
-            - JwtAuthenticationFilter
+            - JwtAuthenticationFilterFactory
         - id: category-service
           uri: lb://category-service
           predicates:
             - Path=/api/categories/**
           filters:
             - RewritePath=/api/categories/(?<segment>.*), /api/categories/${segment}
-            - JwtAuthenticationFilter
+            - JwtAuthenticationFilterFactory
   security:
     csrf:
       enabled: false
