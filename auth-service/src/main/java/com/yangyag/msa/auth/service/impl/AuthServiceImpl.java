@@ -1,7 +1,7 @@
-package com.yangyag.msa.api.service.impl;
+package com.yangyag.msa.auth.service.impl;
 
-import com.yangyag.msa.api.service.AuthService;
-import com.yangyag.msa.api.service.JwtService;
+import com.yangyag.msa.auth.service.AuthService;
+import com.yangyag.msa.auth.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

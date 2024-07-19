@@ -20,11 +20,11 @@ spring:
           lower-case-service-id: true
       routes:
         - id: auth-service
-          uri: lb://api-gateway
+          uri: lb://auth-service
           predicates:
             - Path=/api/auth/**
           filters:
-            - RewritePath=/api/auth/(?<segment>.*), /auth/${segment}
+            - RewritePath=/api/auth/(?<segment>.*), /api/auth/${segment}
         - id: post-service
           uri: lb://post-service
           predicates:
@@ -62,3 +62,8 @@ eureka:
 # 별도의 CORS 설정 섹션
 cors:
   allowed-origins: http://localhost:8083, http://frontend-service:8083
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: DEBUG

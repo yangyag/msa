@@ -1,4 +1,4 @@
-package com.yangyag.msa.api.service;
+package com.yangyag.msa.auth.service;
 
 public interface JwtService {
     String generateToken(String username);

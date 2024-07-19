@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class LoginRequest {
+public class AuthResponse {
+    private boolean valid;
     private String username;
-    private String password;
 }
