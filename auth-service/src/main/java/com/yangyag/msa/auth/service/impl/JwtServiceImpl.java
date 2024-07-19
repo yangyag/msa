@@ -1,6 +1,6 @@
-package com.yangyag.msa.api.service.impl;
+package com.yangyag.msa.auth.service.impl;
 
-import com.yangyag.msa.api.service.JwtService;
+import com.yangyag.msa.auth.service.JwtService;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;

@@ -2,9 +2,9 @@
 setlocal enabledelayedexpansion
 
 REM 변수 설정
-set VERSION=v1.1.21
+set VERSION=v1.0.3
 set DOCKER_HUB_USERNAME=yangyag2
-set SERVICE_NAME=api-gateway
+set SERVICE_NAME=auth-service
 
 REM Gradle을 사용하여 JAR 파일 빌드
 echo Building JAR file for %SERVICE_NAME%...

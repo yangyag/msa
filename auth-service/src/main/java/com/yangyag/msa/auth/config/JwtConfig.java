@@ -1,4 +1,4 @@
-package com.yangyag.msa.api.config;
+package com.yangyag.msa.auth.config;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
