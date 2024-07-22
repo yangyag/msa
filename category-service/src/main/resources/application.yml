@@ -1,19 +1,19 @@
 server:
-  port: 8084  # 카테고리 서비스용 포트 번호 (다른 서비스와 겹치지 않도록 주의)
+  port: 8084
 
 spring:
   application:
     name: category-service
   datasource:
-    url: jdbc:postgresql://postgres:5432/msa_db  # PostgreSQL 데이터베이스 URL
+    url: jdbc:postgresql://postgres:5432/msa_db
     driver-class-name: org.postgresql.Driver
-    username: yangyag  # PostgreSQL 사용자 이름
-    password: yangyag1  # PostgreSQL 비밀번호
+    username: yangyag
+    password: yangyag1!
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true  # SQL 쿼리 로깅 (개발 시 유용)
+    show-sql: true
 
 eureka:
   client:
