@@ -7,8 +7,8 @@ spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/msa_db
     driver-class-name: org.postgresql.Driver
-    username: yangyag
-    password: yangyag1!
+    username: msa
+    password: msa!
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:

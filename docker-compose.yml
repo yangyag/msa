@@ -61,15 +61,15 @@ services:
         max-file: "5"
 
   category-service:
-    image: yangyag2/msa-category-service-image:v1.1.5
+    image: yangyag2/msa-category-service-image:v1.1.6
     ports:
       - "8084:8084"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/msa_db
-      - SPRING_DATASOURCE_USERNAME=yangyag
-      - SPRING_DATASOURCE_PASSWORD=yangyag1!
+      - SPRING_DATASOURCE_USERNAME=msa
+      - SPRING_DATASOURCE_PASSWORD=msa!
     networks:
       - msa-network
     depends_on:
@@ -114,15 +114,15 @@ services:
         max-file: "5"
 
   auth-service:
-    image: yangyag2/msa-auth-service-image:v1.0.5
+    image: yangyag2/msa-auth-service-image:v1.0.6
     ports:
       - "8090:8090"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/msa_db
-      - SPRING_DATASOURCE_USERNAME=yangyag
-      - SPRING_DATASOURCE_PASSWORD=yangyag1!
+      - SPRING_DATASOURCE_USERNAME=msa
+      - SPRING_DATASOURCE_PASSWORD=msa!
     networks:
       - msa-network
     depends_on:
