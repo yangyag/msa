@@ -1,21 +1,26 @@
 package com.yangyag.msa.auth.service.impl;
 
+import com.yangyag.msa.auth.model.entity.User;
 import com.yangyag.msa.auth.service.AuthService;
 import com.yangyag.msa.auth.service.JwtService;
+import com.yangyag.msa.auth.service.UserQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
+    private final UserQueryService userQueryService;
 
     @Override
-    public String authenticate(String username, String password) {
-        if ("testuser".equals(username) && "testpassword".equals(password)) {
-            return jwtService.generateToken(username);
-        }
-
-        return null;
+    public String authenticate(String userId, String password) {
+        return Optional.ofNullable(userQueryService.findByUserIdAndPassword(userId, password))
+                .map(User::getUserName)
+                .map(jwtService::generateToken)
+                .orElseThrow(() -> new BadCredentialsException("Invalid userId or password"));
     }
 }
