@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM 변수 설정
-set VERSION=v1.0.6
+set VERSION=v1.0.14
 set DOCKER_HUB_USERNAME=yangyag2
 set SERVICE_NAME=auth-service
 

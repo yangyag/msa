@@ -1,9 +1,6 @@
 package com.yangyag.msa.auth.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,13 +14,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "user_account")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "user_id")
     private String userId;
 
     @Column(name = "user_name")
-    private String userName;
+    private String username;
 
     private String password;
 

@@ -27,7 +27,7 @@ class UserQueryServiceImplTest {
     void shouldReturnUserWhenProvidedValidUserIdAndPassword() {
         User user = User.builder()
                 .id(1L)
-                .userName("양현민")
+                .username("양현민")
                 .userId("yangyag")
                 .password("yangyag1")
                 .email("yangyag@gmail.com")
@@ -47,7 +47,7 @@ class UserQueryServiceImplTest {
     void shouldThrowExceptionWhenProvidedInvalidUserIdAndPassword() {
         User user = User.builder()
                 .id(1L)
-                .userName("양현민")
+                .username("양현민")
                 .userId("yangyag")
                 .password("yangyag1")
                 .email("yangyag@gmail.com")

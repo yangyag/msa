@@ -1,5 +1,5 @@
 package com.yangyag.msa.auth.service;
 
-public interface AuthService {
+public interface AuthQueryService {
     String authenticate(String username, String password);
 }
