@@ -39,6 +39,10 @@ dependencies {
 
     // postgresql
     runtimeOnly 'org.postgresql:postgresql'
+
+    // Jackson 의존성 추가
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
 }
 
 dependencyManagement {

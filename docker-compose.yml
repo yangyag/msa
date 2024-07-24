@@ -87,7 +87,7 @@ services:
         max-file: "5"
 
   api-gateway:
-    image: yangyag2/msa-api-gateway-image:v1.1.21
+    image: yangyag2/msa-api-gateway-image:v1.1.22
     ports:
       - "8080:8080"
     environment:
@@ -114,7 +114,7 @@ services:
         max-file: "5"
 
   auth-service:
-    image: yangyag2/msa-auth-service-image:v1.0.6
+    image: yangyag2/msa-auth-service-image:v1.0.14
     ports:
       - "8090:8090"
     environment:
@@ -140,20 +140,20 @@ services:
         max-file: "5"
 
   postgres:
-    image: postgres:14
+    image: postgres:16
     container_name: msa-postgres
     environment:
       - POSTGRES_DB=msa_db
-      - POSTGRES_USER=yangyag
-      - POSTGRES_PASSWORD=yangyag1!
+      - POSTGRES_USER=msa
+      - POSTGRES_PASSWORD=msa!
     ports:
       - "5432:5432"
     volumes:
-      - shop_postgres_data:/var/lib/postgresql/data
+      - msa_postgres_data:/var/lib/postgresql/data
     networks:
       - msa-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U yangyag -d msa_db"]
+      test: ["CMD-SHELL", "pg_isready -U msa -d msa_db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -168,4 +168,4 @@ networks:
     driver: bridge
 
 volumes:
-  shop_postgres_data:
+  msa_postgres_data:

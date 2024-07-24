@@ -1,7 +1,6 @@
 package com.yangyag.msa.auth.service.impl;
 
 import com.yangyag.msa.auth.model.entity.User;
-import com.yangyag.msa.auth.service.AuthService;
 import com.yangyag.msa.auth.service.JwtService;
 import com.yangyag.msa.auth.service.UserQueryService;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceImplTest {
+class AuthQueryServiceImplTest {
 
     @Mock
     private JwtService jwtService;
@@ -27,13 +26,13 @@ class AuthServiceImplTest {
     private UserQueryService userQueryService;
 
     @InjectMocks
-    private AuthServiceImpl authService;
+    private AuthQueryServiceImpl authService;
 
     @Test
     void shouldReturnJwtTokenWhenProvidedValidUserIdAndPassword() {
         User user = User.builder()
                 .id(1L)
-                .userName("양현민")
+                .username("양현민")
                 .userId("yangyag")
                 .password("yangyag1")
                 .email("yangyag@gmail.com")
