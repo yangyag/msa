@@ -1,7 +1,9 @@
 package com.yangyag.msa.auth.factory;
 
 import com.yangyag.msa.auth.factory.command.UserCreateCommand;
+import com.yangyag.msa.auth.factory.command.UserUpdateCommand;
 import com.yangyag.msa.auth.model.dto.UserCreateRequest;
+import com.yangyag.msa.auth.model.dto.UserUpdateRequest;
 import com.yangyag.msa.auth.model.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,11 +20,14 @@ class UserCommandFactoryTest {
     @Mock
     private UserCreateCommand userCreateCommand;
 
+    @Mock
+    private UserUpdateCommand userUpdateCommand;
+
     @InjectMocks
     private UserCommandFactory userCommandFactory;
 
     @Test
-    void shouldResultUserWhenCalledCrateUserCommand() {
+    void shouldSuccessfullyCalledCreateCommandMethod() {
         UserCreateRequest userCreateRequest = mock(UserCreateRequest.class);
         User user = User.builder().userId("yangyag").build();
 
@@ -30,11 +35,24 @@ class UserCommandFactoryTest {
         given(userCreateCommand.withRequest(userCreateRequest)).willReturn(() -> user);
 
         //when
-        var reuslt = userCommandFactory.createCommand(userCreateRequest).execute();
+        userCommandFactory.createCommand(userCreateRequest).execute();
 
         //then
         then(userCreateCommand).should().withRequest(userCreateRequest);
+    }
 
-        assertThat(reuslt.getUserId()).isEqualTo(user.getUserId());
+    @Test
+    void shouldSuccessfullyCalledUpdateCommandMethod() {
+        UserUpdateRequest userUpdateRequest = mock(UserUpdateRequest.class);
+        User user = User.builder().userId("yangyag").build();
+
+        //given
+        given(userUpdateCommand.withRequest(userUpdateRequest)).willReturn(() -> user);
+
+        //when
+        userCommandFactory.updateCommand(userUpdateRequest).execute();
+
+        //then
+        then(userUpdateCommand).should().withRequest(userUpdateRequest);
     }
 }

@@ -32,8 +32,7 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public User findByUserIdAndPassword(String userId, String password) {
-        return Optional
-                .ofNullable(userRepository.findByUserIdAndPassword(userId, password))
+        return userRepository.findByUserIdAndPassword(userId, password)
                 .orElseThrow(() -> new BadCredentialsException("Invalid userId or password"));
     }
 }

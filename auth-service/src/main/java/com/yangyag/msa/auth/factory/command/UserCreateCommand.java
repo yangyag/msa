@@ -28,6 +28,6 @@ public class UserCreateCommand implements Command<User> {
 
     @Override
     public User execute() {
-        throw new IllegalStateException("이 메소드는 직접 실행할 수 없습니다. withId() 를 사용하세요.");
+        throw new IllegalStateException("이 메소드는 직접 실행할 수 없습니다. withRequest() 를 사용하세요.");
     }
 }
