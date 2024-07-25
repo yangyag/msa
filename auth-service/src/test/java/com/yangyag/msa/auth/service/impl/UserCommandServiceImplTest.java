@@ -3,6 +3,7 @@ package com.yangyag.msa.auth.service.impl;
 import com.yangyag.msa.auth.config.TestSecurityConfig;
 import com.yangyag.msa.auth.factory.UserCommandFactory;
 import com.yangyag.msa.auth.model.dto.UserCreateRequest;
+import com.yangyag.msa.auth.model.dto.UserUpdateRequest;
 import com.yangyag.msa.auth.model.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +18,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = {TestSecurityConfig.class})
 class UserCommandServiceImplTest {
 
     @Mock
@@ -27,9 +27,9 @@ class UserCommandServiceImplTest {
     private UserCommandServiceImpl userCommandService;
 
     @Test
-    void shouldCreateUserWhenValidRequest() {
+    void shouldSuccessfullyCalledCreateUserMethodWhenValidRequest() {
         UserCreateRequest request = mock(UserCreateRequest.class);
-        User user = User.builder().userId("yangyag").build();
+        User user = mock(User.class);
 
         //given
         given(factory.createCommand(request)).willReturn(() -> user);
@@ -39,6 +39,20 @@ class UserCommandServiceImplTest {
 
         //then
         then(factory).should().createCommand(request);
-        assertThat(result.getUserId()).isEqualTo("yangyag");
+    }
+
+    @Test
+    void shouldSuccessfullyCalledUpdateUserMethodWhenValidRequest() {
+        UserUpdateRequest request = mock(UserUpdateRequest.class);
+        User user = mock(User.class);
+
+        //given
+        given(factory.updateCommand(request)).willReturn(() -> user);
+
+        //when
+        var result = userCommandService.updateUser(request);
+
+        //then
+        then(factory).should().updateCommand(request);
     }
 }

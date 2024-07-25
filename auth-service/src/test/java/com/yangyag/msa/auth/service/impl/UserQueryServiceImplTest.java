@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -34,7 +36,7 @@ class UserQueryServiceImplTest {
                 .build();
 
         //given
-        given(userRepository.findByUserIdAndPassword(anyString(), anyString())).willReturn(user);
+        given(userRepository.findByUserIdAndPassword(anyString(), anyString())).willReturn(Optional.ofNullable(user));
 
         //when
         User result = userQueryService.findByUserIdAndPassword("yangyag", "yangyag1");
@@ -54,7 +56,7 @@ class UserQueryServiceImplTest {
                 .build();
 
         //given
-        given(userRepository.findByUserIdAndPassword("yangyag", "yangyag1")).willReturn(null);
+        given(userRepository.findByUserIdAndPassword("yangyag", "yangyag1")).willReturn(Optional.empty());
 
         //when & then
         assertThatThrownBy(() -> userQueryService.findByUserIdAndPassword("yangyag", "yangyag1"))
