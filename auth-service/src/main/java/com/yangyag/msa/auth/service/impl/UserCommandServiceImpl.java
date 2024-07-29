@@ -2,6 +2,7 @@ package com.yangyag.msa.auth.service.impl;
 
 import com.yangyag.msa.auth.factory.UserCommandFactory;
 import com.yangyag.msa.auth.model.dto.UserCreateRequest;
+import com.yangyag.msa.auth.model.dto.UserDeleteRequest;
 import com.yangyag.msa.auth.model.dto.UserUpdateRequest;
 import com.yangyag.msa.auth.model.entity.User;
 import com.yangyag.msa.auth.service.UserCommandService;
@@ -22,5 +23,10 @@ public class UserCommandServiceImpl implements UserCommandService {
     @Override
     public User updateUser(UserUpdateRequest request) {
         return factory.updateCommand(request).execute();
+    }
+
+    @Override
+    public Boolean deleteUser(UserDeleteRequest request) {
+        return factory.deleteCommand(request).execute();
     }
 }

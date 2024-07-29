@@ -30,7 +30,9 @@ public class UserUpdateCommand implements Command<User> {
                             .build();
                     return userRepository.save(updatedUser);
                 })
-                .orElseThrow(() -> new EntityNotFoundException(String.format("%s 값을 찾을 수 없습니다.", request.getUserId())));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                String.format("%s 값을 찾을 수 없습니다.", request.getUserId())));
     }
 
     @Override
