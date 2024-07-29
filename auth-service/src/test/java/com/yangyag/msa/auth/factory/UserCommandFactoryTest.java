@@ -1,8 +1,10 @@
 package com.yangyag.msa.auth.factory;
 
 import com.yangyag.msa.auth.factory.command.UserCreateCommand;
+import com.yangyag.msa.auth.factory.command.UserDeleteCommand;
 import com.yangyag.msa.auth.factory.command.UserUpdateCommand;
 import com.yangyag.msa.auth.model.dto.UserCreateRequest;
+import com.yangyag.msa.auth.model.dto.UserDeleteRequest;
 import com.yangyag.msa.auth.model.dto.UserUpdateRequest;
 import com.yangyag.msa.auth.model.entity.User;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,36 +24,53 @@ class UserCommandFactoryTest {
     @Mock
     private UserUpdateCommand userUpdateCommand;
 
+    @Mock
+    private UserDeleteCommand userDeleteCommand;
+
     @InjectMocks
     private UserCommandFactory userCommandFactory;
 
     @Test
     void shouldSuccessfullyCalledCreateCommandMethod() {
-        UserCreateRequest userCreateRequest = mock(UserCreateRequest.class);
+        UserCreateRequest request = mock(UserCreateRequest.class);
         User user = User.builder().userId("yangyag").build();
 
         //given
-        given(userCreateCommand.withRequest(userCreateRequest)).willReturn(() -> user);
+        given(userCreateCommand.withRequest(request)).willReturn(() -> user);
 
         //when
-        userCommandFactory.createCommand(userCreateRequest).execute();
+        userCommandFactory.createCommand(request).execute();
 
         //then
-        then(userCreateCommand).should().withRequest(userCreateRequest);
+        then(userCreateCommand).should().withRequest(request);
     }
 
     @Test
     void shouldSuccessfullyCalledUpdateCommandMethod() {
-        UserUpdateRequest userUpdateRequest = mock(UserUpdateRequest.class);
+        UserUpdateRequest request = mock(UserUpdateRequest.class);
         User user = User.builder().userId("yangyag").build();
 
         //given
-        given(userUpdateCommand.withRequest(userUpdateRequest)).willReturn(() -> user);
+        given(userUpdateCommand.withRequest(request)).willReturn(() -> user);
 
         //when
-        userCommandFactory.updateCommand(userUpdateRequest).execute();
+        userCommandFactory.updateCommand(request).execute();
 
         //then
-        then(userUpdateCommand).should().withRequest(userUpdateRequest);
+        then(userUpdateCommand).should().withRequest(request);
+    }
+
+    @Test
+    void shouldSuccessfullyCalledDeleteCommandMethod() {
+        UserDeleteRequest request = mock(UserDeleteRequest.class);
+
+        //given
+        given(userDeleteCommand.withRequest(request)).willReturn(() -> true);
+
+        //when
+        userCommandFactory.deleteCommand(request).execute();
+
+        //then
+        then(userDeleteCommand).should().withRequest(request);
     }
 }

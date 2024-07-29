@@ -1,8 +1,8 @@
 package com.yangyag.msa.auth.service.impl;
 
-import com.yangyag.msa.auth.config.TestSecurityConfig;
 import com.yangyag.msa.auth.factory.UserCommandFactory;
 import com.yangyag.msa.auth.model.dto.UserCreateRequest;
+import com.yangyag.msa.auth.model.dto.UserDeleteRequest;
 import com.yangyag.msa.auth.model.dto.UserUpdateRequest;
 import com.yangyag.msa.auth.model.entity.User;
 import org.junit.jupiter.api.Test;
@@ -10,9 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ContextConfiguration;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -35,7 +33,7 @@ class UserCommandServiceImplTest {
         given(factory.createCommand(request)).willReturn(() -> user);
 
         //when
-        var result = userCommandService.createUser(request);
+        userCommandService.createUser(request);
 
         //then
         then(factory).should().createCommand(request);
@@ -50,9 +48,23 @@ class UserCommandServiceImplTest {
         given(factory.updateCommand(request)).willReturn(() -> user);
 
         //when
-        var result = userCommandService.updateUser(request);
+        userCommandService.updateUser(request);
 
         //then
         then(factory).should().updateCommand(request);
+    }
+
+    @Test
+    void shouldSuccessfullyCalledDeleteUserMethodWhenValidRequest() {
+        UserDeleteRequest request = mock(UserDeleteRequest.class);
+
+        //given
+        given(factory.deleteCommand(request)).willReturn(() -> true);
+
+        //when
+        userCommandService.deleteUser(request);
+
+        //then
+        then(factory).should().deleteCommand(request);
     }
 }

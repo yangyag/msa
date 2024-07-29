@@ -114,7 +114,7 @@ services:
         max-file: "5"
 
   auth-service:
-    image: yangyag2/msa-auth-service-image:v1.0.16
+    image: yangyag2/msa-auth-service-image:v1.0.17
     ports:
       - "8090:8090"
     environment:

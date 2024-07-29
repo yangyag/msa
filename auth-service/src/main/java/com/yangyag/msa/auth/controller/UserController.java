@@ -1,6 +1,7 @@
 package com.yangyag.msa.auth.controller;
 
 import com.yangyag.msa.auth.model.dto.UserCreateRequest;
+import com.yangyag.msa.auth.model.dto.UserDeleteRequest;
 import com.yangyag.msa.auth.model.dto.UserUpdateRequest;
 import com.yangyag.msa.auth.model.entity.User;
 import com.yangyag.msa.auth.service.UserCommandService;
@@ -25,6 +26,13 @@ public class UserController {
     @PatchMapping
     ResponseEntity<Void> updateUser(@RequestBody UserUpdateRequest request) {
         userCommandService.updateUser(request);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    ResponseEntity<Void> deleteUser(@RequestBody UserDeleteRequest request) {
+        userCommandService.deleteUser(request);
 
         return ResponseEntity.noContent().build();
     }
