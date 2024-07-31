@@ -87,7 +87,7 @@ services:
         max-file: "5"
 
   api-gateway:
-    image: yangyag2/msa-api-gateway-image:v1.1.22
+    image: yangyag2/msa-api-gateway-image:v1.1.36
     ports:
       - "8080:8080"
     environment:
@@ -114,7 +114,7 @@ services:
         max-file: "5"
 
   auth-service:
-    image: yangyag2/msa-auth-service-image:v1.0.17
+    image: yangyag2/msa-auth-service-image:v1.0.26
     ports:
       - "8090:8090"
     environment:

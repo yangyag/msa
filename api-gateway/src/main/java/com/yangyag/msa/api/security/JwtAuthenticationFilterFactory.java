@@ -16,8 +16,13 @@ import java.time.Duration;
 
 @Component
 public class JwtAuthenticationFilterFactory extends AbstractGatewayFilterFactory<JwtAuthenticationFilterFactory.Config> {
-
     private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilterFactory.class);
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String AUTH_USER_HEADER = "X-Auth-User-Id";
+    private static final String AUTH_SERVICE_URL = "http://auth-service/api/auth/validate";
+    private static final Duration TIMEOUT_DURATION = Duration.ofSeconds(10);
+
     private final WebClient.Builder webClientBuilder;
 
     public JwtAuthenticationFilterFactory(WebClient.Builder webClientBuilder) {
@@ -29,43 +34,61 @@ public class JwtAuthenticationFilterFactory extends AbstractGatewayFilterFactory
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+            String authHeader = request.getHeaders().getFirst(AUTHORIZATION_HEADER);
 
-            String authHeader = request.getHeaders().getFirst("Authorization");
-
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                log.warn("Authorization 헤더가 없거나 잘못 되었습니다.");
-                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                return exchange.getResponse().setComplete();
+            if (!isValidAuthHeader(authHeader)) {
+                return handleUnauthorized(exchange);
             }
 
-            String token = authHeader.substring(7);
-
-            return webClientBuilder.build()
-                    .post()
-                    .uri("http://auth-service/api/auth/validate")
-                    .bodyValue(token)
-                    .retrieve()
-                    .bodyToMono(AuthResponse.class)
-                    .timeout(Duration.ofSeconds(10))
-                    .flatMap(authResponse -> {
-                        if (authResponse.isValid()) {
-                            log.info("JWT 유효성 검증 성공했습니다. User : {}", authResponse.getUsername());
-                            ServerHttpRequest modifiedRequest = request.mutate()
-                                    .header("X-Auth-Username", authResponse.getUsername())
-                                    .build();
-                            return chain.filter(exchange.mutate().request(modifiedRequest).build());
-                        } else {
-                            log.warn("JWT 유효성 검증에 실패 하였습니다.");
-                            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                            return exchange.getResponse().setComplete();
-                        }
-                    })
-                    .onErrorResume(e -> {
-                        log.error("JWT 유효성 검증 중 에러가 발생하였습니다. 에러 내용 : {}", e.getMessage());
-                        exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-                        return exchange.getResponse().setComplete();
-                    });
+            String token = extractToken(authHeader);
+            return validateToken(token)
+                    .flatMap(authResponse -> handleValidAuthResponse(authResponse, request, exchange, chain))
+                    .onErrorResume(e -> handleError(e, exchange));
         };
+    }
+
+    private boolean isValidAuthHeader(String authHeader) {
+        return authHeader != null && authHeader.startsWith(BEARER_PREFIX);
+    }
+
+    private String extractToken(String authHeader) {
+        return authHeader.substring(BEARER_PREFIX.length());
+    }
+
+    private Mono<AuthResponse> validateToken(String token) {
+        return webClientBuilder.build()
+                .post()
+                .uri(AUTH_SERVICE_URL)
+                .bodyValue(token)
+                .retrieve()
+                .bodyToMono(AuthResponse.class)
+                .timeout(TIMEOUT_DURATION);
+    }
+
+    private Mono<Void> handleValidAuthResponse(AuthResponse authResponse, ServerHttpRequest request,
+                                               org.springframework.web.server.ServerWebExchange exchange,
+                                               org.springframework.cloud.gateway.filter.GatewayFilterChain chain) {
+        if (authResponse.isValid()) {
+            log.debug("JWT 검증 성공. User: {}", authResponse.getUserId());
+            ServerHttpRequest modifiedRequest = request.mutate()
+                    .header(AUTH_USER_HEADER, authResponse.getUserId())
+                    .build();
+            return chain.filter(exchange.mutate().request(modifiedRequest).build());
+        } else {
+            log.warn("JWT 검증 실패");
+            return handleUnauthorized(exchange);
+        }
+    }
+
+    private Mono<Void> handleUnauthorized(org.springframework.web.server.ServerWebExchange exchange) {
+        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+        return exchange.getResponse().setComplete();
+    }
+
+    private Mono<Void> handleError(Throwable e, org.springframework.web.server.ServerWebExchange exchange) {
+        log.error("JWT 검증 도중 오류 발생", e);
+        exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+        return exchange.getResponse().setComplete();
     }
 
     public static class Config {

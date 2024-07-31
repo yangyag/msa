@@ -40,7 +40,7 @@ class AuthQueryServiceImplTest {
 
         //given
         given(userQueryService.findByUserIdAndPassword(anyString(),anyString())).willReturn(user);
-        given(jwtService.generateToken(anyString())).willReturn("jwt");
+        given(jwtService.generateToken(anyString(), anyString())).willReturn("jwt");
 
         //when
         var result = authService.authenticate("yangyag", "yangyag1");
@@ -48,7 +48,7 @@ class AuthQueryServiceImplTest {
         //then
         assertThat(result).isEqualTo("jwt");
         then(userQueryService).should().findByUserIdAndPassword("yangyag", "yangyag1");
-        then(jwtService).should().generateToken(anyString());
+        then(jwtService).should().generateToken(anyString(), anyString());
     }
 
     @Test

@@ -8,4 +8,5 @@ import lombok.Getter;
 public class AuthResponse {
     private boolean valid;
     private String username;
+    private String userId;
 }

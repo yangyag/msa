@@ -15,10 +15,12 @@ public class JwtServiceImpl implements JwtService {
     private final Key jwtSecretKey;
 
     @Override
-    public String generateToken(String username) {
+    public String generateToken(String userId, String username) {
         long expirationTime = 1000 * 60 * 60; // 1 hour
         return Jwts.builder()
                 .setSubject(username)
+                .claim("userId", userId)
+                .claim("username", username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(jwtSecretKey)
@@ -34,7 +36,7 @@ public class JwtServiceImpl implements JwtService {
                     .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            return false; // 토큰이 유효하지 않음
+            return false;
         }
     }
 
@@ -46,5 +48,15 @@ public class JwtServiceImpl implements JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    @Override
+    public String getUserIdFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(jwtSecretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", String.class);
     }
 }
