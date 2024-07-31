@@ -35,11 +35,11 @@ public class AuthController {
     @PostMapping("/validate")
     public ResponseEntity<AuthResponse> validateToken(@RequestBody String token) {
         boolean isValid = jwtService.validateToken(token);
-        String username = jwtService.getUsernameFromToken(token);
+        String userId = jwtService.getUserIdFromToken(token);
 
         return ResponseEntity.ok(AuthResponse.builder()
                 .valid(isValid)
-                .username(username)
+                .userId(userId)
                 .build());
     }
 }

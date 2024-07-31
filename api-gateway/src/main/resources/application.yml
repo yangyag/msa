@@ -22,10 +22,24 @@ spring:
         - id: auth-service
           uri: lb://auth-service
           predicates:
-            - Path=/api/auth/**, /api/user/**
+            - Path=/api/auth/**
           filters:
             - RewritePath=/api/auth/(?<segment>.*), /api/auth/${segment}
-            - RewritePath=/api/user/(?<segment>.*), /api/user/${segment}
+        - id: user-register
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/users
+            - Method=POST
+          filters:
+            - RewritePath=/api/users/(?<segment>.*), /api/users/${segment}
+        - id: user-protected
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/users/**
+            - Method=GET,DELETE,PATCH,PUT
+          filters:
+            - RewritePath=/api/users/(?<segment>.*), /api/users/${segment}
+            - JwtAuthenticationFilterFactory
         - id: post-service
           uri: lb://post-service
           predicates:
@@ -65,6 +79,4 @@ cors:
   allowed-origins: http://localhost:8083, http://frontend-service:8083
 
 logging:
-  level:
-    org.springframework.cloud.gateway: DEBUG
-    reactor.netty: DEBUG
+  config: classpath:logback-spring.xml

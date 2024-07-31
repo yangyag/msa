@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM 변수 설정
-set VERSION=v1.1.22
+set VERSION=v1.1.36
 set DOCKER_HUB_USERNAME=yangyag2
 set SERVICE_NAME=api-gateway
 

@@ -19,8 +19,7 @@ public class AuthQueryServiceImpl implements AuthQueryService {
     @Override
     public String authenticate(String userId, String password) {
         return Optional.ofNullable(userQueryService.findByUserIdAndPassword(userId, password))
-                .map(User::getUsername)
-                .map(jwtService::generateToken)
+                .map(user -> jwtService.generateToken(user.getUserId(), user.getUsername()))
                 .orElseThrow(() -> new BadCredentialsException("Invalid userId or password"));
     }
 }

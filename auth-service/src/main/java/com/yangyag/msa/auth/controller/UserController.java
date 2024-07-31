@@ -8,11 +8,12 @@ import com.yangyag.msa.auth.service.UserCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserCommandService userCommandService;
 
@@ -31,9 +32,14 @@ public class UserController {
     }
 
     @DeleteMapping
-    ResponseEntity<Void> deleteUser(@RequestBody UserDeleteRequest request) {
-        userCommandService.deleteUser(request);
+    ResponseEntity<Void> deleteUser(@RequestBody UserDeleteRequest request, Authentication authentication) {
+        String authenticatedUserId = (String) authentication.getPrincipal();
 
+        if (!authenticatedUserId.equals(request.getUserId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        userCommandService.deleteUser(request);
         return ResponseEntity.noContent().build();
     }
 }
