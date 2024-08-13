@@ -1,6 +1,7 @@
 package com.yangyag.msa.auth.factory.command;
 
 import com.yangyag.msa.auth.model.dto.UserCreateRequest;
+import com.yangyag.msa.auth.model.entity.Role;
 import com.yangyag.msa.auth.model.entity.User;
 import com.yangyag.msa.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class UserCreateCommand implements Command<User> {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .role(Role.USER)
                 .build();
 
         return userRepository.save(user);

@@ -1,6 +1,7 @@
 package com.yangyag.msa.auth.factory.command;
 
 import com.yangyag.msa.auth.model.dto.UserCreateRequest;
+import com.yangyag.msa.auth.model.entity.Role;
 import com.yangyag.msa.auth.model.entity.User;
 import com.yangyag.msa.auth.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ class UserCreateCommandTest {
                 .username("테스트")
                 .userId("yangyag")
                 .email("yangyag@gmail.com")
+                .role(Role.ADMIN)
                 .build();
 
         User savedUser = User.builder()
@@ -37,6 +39,7 @@ class UserCreateCommandTest {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .role(request.getRole())
                 .build();
 
         //given
