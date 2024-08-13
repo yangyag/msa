@@ -36,10 +36,12 @@ public class AuthController {
     public ResponseEntity<AuthResponse> validateToken(@RequestBody String token) {
         boolean isValid = jwtService.validateToken(token);
         String userId = jwtService.getUserIdFromToken(token);
+        String role = jwtService.getRoleFromToken(token);
 
         return ResponseEntity.ok(AuthResponse.builder()
                 .valid(isValid)
                 .userId(userId)
+                .role(role)
                 .build());
     }
 }

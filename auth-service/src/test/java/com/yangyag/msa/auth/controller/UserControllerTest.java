@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -69,29 +69,34 @@ class UserControllerTest {
     }
 
     @Test
-//    @WithMockUser(username =  "yangyag")
-    void shouldSuccessfullyDeleteUserWhenValidRequest() throws Exception {
-        // Given
+    void shouldSuccessfullyDeleteUserWhenValidRequestAndAdminRole() throws Exception {
         UserDeleteRequest request = UserDeleteRequest.builder()
                 .userId("yangyag")
                 .build();
 
         when(userCommandService.deleteUser(any(UserDeleteRequest.class))).thenReturn(true);
 
-
-        // When & Then
         mockMvc.perform(delete("/api/users")
-                        .with(SecurityMockMvcRequestPostProcessors.authentication(
-                                new TestingAuthenticationToken(
-                                        request.getUserId(),
-                                        "password",
-                                        "ROLE_USER")
-                        ))
+                        .with(SecurityMockMvcRequestPostProcessors.user(request.getUserId())
+                                .authorities(new SimpleGrantedAuthority("ADMIN")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNoContent());
 
-        // Verify that the service method was called
         verify(userCommandService).deleteUser(any(UserDeleteRequest.class));
+    }
+
+    @Test
+    void shouldFailDeleteUserWhenNotAdminRole() throws Exception {
+        UserDeleteRequest request = UserDeleteRequest.builder()
+                .userId("yangyag")
+                .build();
+
+        mockMvc.perform(delete("/api/users")
+                        .with(SecurityMockMvcRequestPostProcessors.user(request.getUserId())
+                                .authorities(new SimpleGrantedAuthority("USER")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
     }
 }

@@ -1,6 +1,7 @@
 package com.yangyag.msa.auth.factory.command;
 
 import com.yangyag.msa.auth.model.dto.UserUpdateRequest;
+import com.yangyag.msa.auth.model.entity.Role;
 import com.yangyag.msa.auth.model.entity.User;
 import com.yangyag.msa.auth.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,6 +40,7 @@ class UserUpdateCommandTest {
                 .username("기존이름")
                 .email("yangyag@hanmail.net")
                 .password("1111")
+                .role(Role.USER)
                 .build();
 
         updateRequest = UserUpdateRequest.builder()
@@ -46,6 +48,7 @@ class UserUpdateCommandTest {
                 .username("새이름")
                 .email("yangyag@gmail.com")
                 .password("2222")
+                .role(Role.USER)
                 .build();
     }
 
@@ -58,6 +61,7 @@ class UserUpdateCommandTest {
                 .username(updateRequest.getUsername())
                 .email(updateRequest.getEmail())
                 .password(updateRequest.getPassword())
+                .role(existingUser.getRole())
                 .build();
 
         given(userRepository.findByUserId(updateRequest.getUserId())).willReturn(Optional.of(existingUser));
@@ -78,6 +82,7 @@ class UserUpdateCommandTest {
                     assertThat(user.getUsername()).isEqualTo(updateRequest.getUsername());
                     assertThat(user.getEmail()).isEqualTo(updateRequest.getEmail());
                     assertThat(user.getPassword()).isEqualTo(updateRequest.getPassword());
+                    assertThat(user.getRole()).isEqualTo(updateRequest.getRole());
                 });
 
         // 기존 사용자에 대한 정보는 변경되지 않아야 한다.

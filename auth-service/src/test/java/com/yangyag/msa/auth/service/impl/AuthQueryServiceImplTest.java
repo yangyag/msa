@@ -1,5 +1,6 @@
 package com.yangyag.msa.auth.service.impl;
 
+import com.yangyag.msa.auth.model.entity.Role;
 import com.yangyag.msa.auth.model.entity.User;
 import com.yangyag.msa.auth.service.JwtService;
 import com.yangyag.msa.auth.service.UserQueryService;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -36,11 +38,12 @@ class AuthQueryServiceImplTest {
                 .userId("yangyag")
                 .password("yangyag1")
                 .email("yangyag@gmail.com")
+                .role(Role.ADMIN)
                 .build();
 
         //given
         given(userQueryService.findByUserIdAndPassword(anyString(),anyString())).willReturn(user);
-        given(jwtService.generateToken(anyString(), anyString())).willReturn("jwt");
+        given(jwtService.generateToken(anyString(), anyString(), eq(Role.ADMIN))).willReturn("jwt");
 
         //when
         var result = authService.authenticate("yangyag", "yangyag1");
@@ -48,7 +51,7 @@ class AuthQueryServiceImplTest {
         //then
         assertThat(result).isEqualTo("jwt");
         then(userQueryService).should().findByUserIdAndPassword("yangyag", "yangyag1");
-        then(jwtService).should().generateToken(anyString(), anyString());
+        then(jwtService).should().generateToken(eq("yangyag"), eq("양현민"), eq(Role.ADMIN));
     }
 
     @Test

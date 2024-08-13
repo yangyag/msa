@@ -11,6 +11,8 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 
 import java.time.Duration;
 
@@ -20,6 +22,7 @@ public class JwtAuthenticationFilterFactory extends AbstractGatewayFilterFactory
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String AUTH_USER_HEADER = "X-Auth-User-Id";
+    private static final String AUTH_USER_ROLE_HEADER = "X-Auth-User-Role";
     private static final String AUTH_SERVICE_URL = "http://auth-service/api/auth/validate";
     private static final Duration TIMEOUT_DURATION = Duration.ofSeconds(10);
 
@@ -65,13 +68,15 @@ public class JwtAuthenticationFilterFactory extends AbstractGatewayFilterFactory
                 .timeout(TIMEOUT_DURATION);
     }
 
-    private Mono<Void> handleValidAuthResponse(AuthResponse authResponse, ServerHttpRequest request,
-                                               org.springframework.web.server.ServerWebExchange exchange,
-                                               org.springframework.cloud.gateway.filter.GatewayFilterChain chain) {
+    private Mono<Void> handleValidAuthResponse(AuthResponse authResponse,
+                                               ServerHttpRequest request,
+                                               ServerWebExchange exchange,
+                                               GatewayFilterChain chain) {
         if (authResponse.isValid()) {
-            log.debug("JWT 검증 성공. User: {}", authResponse.getUserId());
+            log.debug("JWT 검증 성공. User: {}, Role: {}", authResponse.getUserId(), authResponse.getRole());
             ServerHttpRequest modifiedRequest = request.mutate()
                     .header(AUTH_USER_HEADER, authResponse.getUserId())
+                    .header(AUTH_USER_ROLE_HEADER, authResponse.getRole().name())
                     .build();
             return chain.filter(exchange.mutate().request(modifiedRequest).build());
         } else {
@@ -80,12 +85,12 @@ public class JwtAuthenticationFilterFactory extends AbstractGatewayFilterFactory
         }
     }
 
-    private Mono<Void> handleUnauthorized(org.springframework.web.server.ServerWebExchange exchange) {
+    private Mono<Void> handleUnauthorized(ServerWebExchange exchange) {
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
         return exchange.getResponse().setComplete();
     }
 
-    private Mono<Void> handleError(Throwable e, org.springframework.web.server.ServerWebExchange exchange) {
+    private Mono<Void> handleError(Throwable e, ServerWebExchange exchange) {
         log.error("JWT 검증 도중 오류 발생", e);
         exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
         return exchange.getResponse().setComplete();

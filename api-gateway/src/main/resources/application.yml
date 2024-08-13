@@ -11,9 +11,18 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
-            allowedMethods: "*"
+            allowedOrigins:
+              - "http://localhost:8083"
+              - "http://frontend-service:8083"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
             allowedHeaders: "*"
+            allowCredentials: true
       discovery:
         locator:
           enabled: true
@@ -73,10 +82,6 @@ eureka:
       defaultZone: http://eureka-service:8761/eureka/
   instance:
     preferIpAddress: true
-
-# 별도의 CORS 설정 섹션
-cors:
-  allowed-origins: http://localhost:8083, http://frontend-service:8083
 
 logging:
   config: classpath:logback-spring.xml

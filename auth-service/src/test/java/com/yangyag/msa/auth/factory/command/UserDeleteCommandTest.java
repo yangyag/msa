@@ -1,6 +1,7 @@
 package com.yangyag.msa.auth.factory.command;
 
 import com.yangyag.msa.auth.model.dto.UserDeleteRequest;
+import com.yangyag.msa.auth.model.entity.Role;
 import com.yangyag.msa.auth.model.entity.User;
 import com.yangyag.msa.auth.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -41,6 +42,7 @@ class UserDeleteCommandTest {
         //given
         request = UserDeleteRequest.builder()
                 .userId("test")
+                .role(Role.ADMIN)
                 .build();
 
     }
