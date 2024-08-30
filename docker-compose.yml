@@ -5,11 +5,6 @@ services:
       - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
     networks:
       - msa-network
     logging:
@@ -27,9 +22,6 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
     networks:
       - msa-network
-    depends_on:
-      eureka-service:
-        condition: service_healthy
     deploy:
       restart_policy:
         condition: on-failure
@@ -48,9 +40,6 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
     networks:
       - msa-network
-    depends_on:
-      eureka-service:
-        condition: service_healthy
     deploy:
       restart_policy:
         condition: on-failure
@@ -72,11 +61,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=msa!
     networks:
       - msa-network
-    depends_on:
-      eureka-service:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
     deploy:
       restart_policy:
         condition: on-failure
@@ -95,15 +79,6 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
     networks:
       - msa-network
-    depends_on:
-      eureka-service:
-        condition: service_healthy
-      post-service:
-        condition: service_started
-      reply-service:
-        condition: service_started
-      category-service:
-        condition: service_started
     deploy:
       restart_policy:
         condition: on-failure
@@ -125,11 +100,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=msa!
     networks:
       - msa-network
-    depends_on:
-      eureka-service:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
     deploy:
       restart_policy:
         condition: on-failure
@@ -152,11 +122,6 @@ services:
       - msa_postgres_data:/var/lib/postgresql/data
     networks:
       - msa-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U msa -d msa_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     logging:
       driver: "json-file"
       options:
