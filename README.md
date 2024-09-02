@@ -41,3 +41,6 @@
 ## 7. Reply Service(댓글) 구현부
 #### - Spring Data JPA
 #### - 구현 예정
+
+## xx. 공통 사항
+#### - Google Java Format 코드 컨벤션 적용
