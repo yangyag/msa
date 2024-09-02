@@ -20,22 +20,27 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/users").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/api/users").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/users").authenticated()
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        authz ->
+                                authz.requestMatchers("/api/auth/**")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/api/users")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/api/users")
+                                        .authenticated()
+                                        .requestMatchers(HttpMethod.PATCH, "/api/users")
+                                        .authenticated()
+                                        .requestMatchers(HttpMethod.DELETE, "/api/users")
+                                        .authenticated()
+                                        .anyRequest()
+                                        .authenticated())
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // JWT 필터
-         http.addFilterBefore(apiGatewayAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(
+                apiGatewayAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

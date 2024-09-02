@@ -16,10 +16,8 @@ public class CategoryCreateCommand implements Command<Category> {
     }
 
     private Category saveCategory(CategoryCreateRequest request) {
-        Category category = Category.builder()
-                .name(request.getName())
-                .parentId(request.getParentId())
-                .build();
+        Category category =
+                Category.builder().name(request.getName()).parentId(request.getParentId()).build();
 
         return repository.save(category);
     }

@@ -1,5 +1,9 @@
 package com.yangyag.msa.category;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yangyag.msa.category.model.dto.CategoryCreateRequest;
 import com.yangyag.msa.category.model.dto.CategoryDeleteRequest;
@@ -15,21 +19,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CategoryIntegrationTest {
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private CategoryRepository repository;
+    @Autowired private CategoryRepository repository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
     private Category category1;
     private Category category2;
@@ -41,12 +38,8 @@ public class CategoryIntegrationTest {
     }
 
     private void saveCategories() {
-        category1 = repository.save(Category.builder()
-                .name("의류")
-                .build());
-        category2 = repository.save(Category.builder()
-                .name("전자기기")
-                .build());
+        category1 = repository.save(Category.builder().name("의류").build());
+        category2 = repository.save(Category.builder().name("전자기기").build());
     }
 
     @Nested
@@ -77,9 +70,10 @@ public class CategoryIntegrationTest {
         void shouldCreateCategory() throws Exception {
             CategoryCreateRequest request = CategoryCreateRequest.builder().name("의류").build();
 
-            mockMvc.perform(post("/api/categories")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
+            mockMvc.perform(
+                            post("/api/categories")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isCreated());
         }
     }
@@ -88,14 +82,13 @@ public class CategoryIntegrationTest {
     class PatchTests {
         @Test
         void shouldUpdateCategoryWhenValidRequest() throws Exception {
-            CategoryUpdateRequest request = CategoryUpdateRequest.builder()
-                    .name("신발")
-                    .id(category1.getId())
-                    .build();
+            CategoryUpdateRequest request =
+                    CategoryUpdateRequest.builder().name("신발").id(category1.getId()).build();
 
-            mockMvc.perform(patch("/api/categories")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
+            mockMvc.perform(
+                            patch("/api/categories")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isNoContent());
         }
     }
@@ -106,18 +99,18 @@ public class CategoryIntegrationTest {
         void shouldDeleteCategoryWhenGetRequestWithExistingId() throws Exception {
             Category category = this.createTempCategoryForDeleteTest();
 
-            CategoryDeleteRequest request = CategoryDeleteRequest.builder().id(category.getId()).build();
+            CategoryDeleteRequest request =
+                    CategoryDeleteRequest.builder().id(category.getId()).build();
 
-            mockMvc.perform(delete("/api/categories")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
+            mockMvc.perform(
+                            delete("/api/categories")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isNoContent());
         }
 
         private Category createTempCategoryForDeleteTest() {
-            return repository.save(Category.builder()
-                    .name("가전제품")
-                    .build());
+            return repository.save(Category.builder().name("가전제품").build());
         }
     }
 }

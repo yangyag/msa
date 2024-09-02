@@ -2,10 +2,9 @@ package com.yangyag.msa.auth.config;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.security.Key;
 
 @Configuration
 public class JwtConfig {

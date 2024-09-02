@@ -1,3 +1,18 @@
+plugins {
+    id 'com.diffplug.spotless' version '6.25.0' apply false
+}
+
+subprojects {
+    apply plugin: 'com.diffplug.spotless'
+
+    spotless {
+        java {
+            //들여쓰기 4
+            googleJavaFormat().aosp()
+        }
+    }
+}
+
 allprojects {
     repositories {
         mavenCentral()
