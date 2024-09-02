@@ -7,6 +7,8 @@ import com.yangyag.msa.auth.model.entity.User;
 
 public interface UserCommandService {
     User createUser(UserCreateRequest request);
+
     User updateUser(UserUpdateRequest request);
+
     Boolean deleteUser(UserDeleteRequest request);
 }

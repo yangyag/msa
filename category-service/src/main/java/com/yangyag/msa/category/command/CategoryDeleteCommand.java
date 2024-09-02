@@ -13,9 +13,15 @@ public class CategoryDeleteCommand implements Command<Category> {
     private final CategoryRepository repository;
 
     public Command<Category> withRequest(CategoryDeleteRequest request) {
-        return () -> repository.findById(request.getId())
-                .map(this::deleteAndReturn)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("%s 값을 찾을 수 없습니다.", request.getId())));
+        return () ->
+                repository
+                        .findById(request.getId())
+                        .map(this::deleteAndReturn)
+                        .orElseThrow(
+                                () ->
+                                        new EntityNotFoundException(
+                                                String.format(
+                                                        "%s 값을 찾을 수 없습니다.", request.getId())));
     }
 
     private Category deleteAndReturn(Category category) {

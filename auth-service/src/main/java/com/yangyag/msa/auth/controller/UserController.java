@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +34,8 @@ public class UserController {
     }
 
     @DeleteMapping
-    ResponseEntity<Void> deleteUser(@RequestBody UserDeleteRequest request, Authentication authentication) {
+    ResponseEntity<Void> deleteUser(
+            @RequestBody UserDeleteRequest request, Authentication authentication) {
         if (!hasAdminAuthority(authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

@@ -1,5 +1,8 @@
 package com.yangyag.msa.category.service.impl;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+
 import com.yangyag.msa.category.command.Command;
 import com.yangyag.msa.category.factory.CategoryCommandFactory;
 import com.yangyag.msa.category.model.dto.CategoryCreateRequest;
@@ -11,67 +14,47 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
 @ExtendWith(MockitoExtension.class)
 class CategoryCommandServiceImplTest {
-    @Mock
-    private Command<Category> command;
+    @Mock private Command<Category> command;
 
-    @Mock
-    private CategoryCommandFactory factory;
+    @Mock private CategoryCommandFactory factory;
 
-    @InjectMocks
-    private CategoryCommandServiceImpl categoryCommandService;
+    @InjectMocks private CategoryCommandServiceImpl categoryCommandService;
 
     @Test
     void shouldCreateCategoryWhenValidRequest() {
-        CategoryCreateRequest request = CategoryCreateRequest.builder()
-                .name("의류")
-                .parentId(0L)
-                .build();
+        CategoryCreateRequest request =
+                CategoryCreateRequest.builder().name("의류").parentId(0L).build();
 
-        Category category = Category.builder()
-                .name(request.getName())
-                .parentId(request.getParentId())
-                .build();
+        Category category =
+                Category.builder().name(request.getName()).parentId(request.getParentId()).build();
 
-        //given
+        // given
         given(factory.createCategoryCommand(request)).willReturn(command);
         given(command.execute()).willReturn(category);
 
-        //when
+        // when
         categoryCommandService.create(request);
 
-        //then
+        // then
         then(factory).should().createCategoryCommand(request);
     }
 
     @Test
     void shouldUpdateCategoryWhenValidRequest() {
-        CategoryUpdateRequest request = CategoryUpdateRequest.builder()
-                .id(1L)
-                .name("신발")
-                .build();
+        CategoryUpdateRequest request = CategoryUpdateRequest.builder().id(1L).name("신발").build();
 
-        Category category = Category.builder()
-                .id(request.getId())
-                .name(request.getName())
-                .build();
+        Category category = Category.builder().id(request.getId()).name(request.getName()).build();
 
-        //given
+        // given
         given(factory.updateCategoryCommand(request)).willReturn(command);
         given(command.execute()).willReturn(category);
 
-        //when
+        // when
         categoryCommandService.update(request);
 
-        //then
+        // then
         then(factory).should().updateCategoryCommand(request);
         then(command).should().execute();
     }

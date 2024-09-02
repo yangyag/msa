@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserQueryServiceImpl implements UserQueryService {
@@ -32,7 +30,8 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public User findByUserIdAndPassword(String userId, String password) {
-        return userRepository.findByUserIdAndPassword(userId, password)
+        return userRepository
+                .findByUserIdAndPassword(userId, password)
                 .orElseThrow(() -> new BadCredentialsException("Invalid userId or password"));
     }
 }

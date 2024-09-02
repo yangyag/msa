@@ -2,11 +2,10 @@ package com.yangyag.msa.category.controller;
 
 import com.yangyag.msa.category.model.entity.Category;
 import com.yangyag.msa.category.service.CategoryQueryService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")

@@ -4,7 +4,6 @@ import com.yangyag.msa.category.model.dto.CategoryUpdateRequest;
 import com.yangyag.msa.category.model.entity.Category;
 import com.yangyag.msa.category.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +13,19 @@ public class CategoryUpdateCommand implements Command<Category> {
     private final CategoryRepository repository;
 
     public Command<Category> withRequest(CategoryUpdateRequest request) {
-        return () ->  repository.findById(request.getId())
-                .map(category -> {
-                    category.setName(request.getName());
-                    return repository.save(category);
-                })
-                .orElseThrow(() ->
-                        new EntityNotFoundException(String.format("%s 값을 찾을 수 없습니다.", request.getId())));
+        return () ->
+                repository
+                        .findById(request.getId())
+                        .map(
+                                category -> {
+                                    category.setName(request.getName());
+                                    return repository.save(category);
+                                })
+                        .orElseThrow(
+                                () ->
+                                        new EntityNotFoundException(
+                                                String.format(
+                                                        "%s 값을 찾을 수 없습니다.", request.getId())));
     }
 
     @Override

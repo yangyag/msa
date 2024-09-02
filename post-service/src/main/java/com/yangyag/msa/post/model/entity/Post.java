@@ -1,9 +1,8 @@
 package com.yangyag.msa.post.model.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Getter

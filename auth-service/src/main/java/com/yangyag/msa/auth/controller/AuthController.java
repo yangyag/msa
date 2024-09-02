@@ -20,10 +20,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        String token = authQueryService.authenticate(
-                loginRequest.getUserId(),
-                loginRequest.getPassword()
-        );
+        String token =
+                authQueryService.authenticate(loginRequest.getUserId(), loginRequest.getPassword());
 
         if (token != null) {
             return ResponseEntity.ok(token);
@@ -38,10 +36,7 @@ public class AuthController {
         String userId = jwtService.getUserIdFromToken(token);
         String role = jwtService.getRoleFromToken(token);
 
-        return ResponseEntity.ok(AuthResponse.builder()
-                .valid(isValid)
-                .userId(userId)
-                .role(role)
-                .build());
+        return ResponseEntity.ok(
+                AuthResponse.builder().valid(isValid).userId(userId).role(role).build());
     }
 }

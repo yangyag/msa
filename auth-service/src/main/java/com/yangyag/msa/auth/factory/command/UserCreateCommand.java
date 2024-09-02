@@ -17,13 +17,14 @@ public class UserCreateCommand implements Command<User> {
     }
 
     private User saveUser(UserCreateRequest request) {
-        User user = User.builder()
-                .userId(request.getUserId())
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .role(Role.USER)
-                .build();
+        User user =
+                User.builder()
+                        .userId(request.getUserId())
+                        .username(request.getUsername())
+                        .email(request.getEmail())
+                        .password(request.getPassword())
+                        .role(Role.USER)
+                        .build();
 
         return userRepository.save(user);
     }

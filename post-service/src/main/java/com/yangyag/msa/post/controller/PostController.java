@@ -1,13 +1,11 @@
 package com.yangyag.msa.post.controller;
 
-
 import com.yangyag.msa.post.model.entity.Post;
 import com.yangyag.msa.post.service.PostService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +21,8 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Long id) {
-        return postService.getPostById(id)
+        return postService
+                .getPostById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
