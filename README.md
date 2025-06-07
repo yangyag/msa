@@ -22,8 +22,8 @@
 ##### - Factory Pattern
 ##### - CQRS Pattern 준수
 
-## 4. Kubernetis
-#### - minikukbe 에서 구동
+## 4. Kubernetes
+#### - minikube 에서 구동
 #### - .k8s 폴더의 k8s-manifests.yaml 참조
 #### - Front 영역은 Vue.js 로 구성 중
 
