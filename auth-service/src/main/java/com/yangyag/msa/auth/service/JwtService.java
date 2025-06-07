@@ -4,7 +4,7 @@ import com.yangyag.msa.auth.model.entity.Role;
 import io.jsonwebtoken.Claims;
 
 public interface JwtService {
-    String generateToken(String username, String userId, Role userRole);
+    String generateToken(String userId, String username, Role userRole);
 
     boolean validateToken(String token);
 
